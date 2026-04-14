@@ -10,11 +10,10 @@
 <body>
 
     <nav>
-        <div class="logo">MUTIARA MEDIKA</div>
+        <div class="logo" href="#">MUTIARA MEDIKA</div>
         <div class="nav-links">
             <a href="#">Tentang</a>
-            <a href="#layanan kami">Layanan</a>
-
+            <a href="#">Layanan</a>
             @if (!Auth::check()) 
             <a href="{{ route('login') }}">Log In</a>
             <a href="{{ route('register') }}">Sign Up</a>
@@ -43,9 +42,9 @@
               untuk memudahkan pasien dalam mendapatkan pelayanan.</p>
             <button class="btn-lainnya">TENTANG KAMI</button>
         </div>
-        <!-- <div class="hero-image">
-            <img src="images/meedika.png">
-        </div> -->
+        <div class="hero-image">
+            <img src="img/meedika.png">
+        </div>
     </section>
 
     <div class="emergency-container">

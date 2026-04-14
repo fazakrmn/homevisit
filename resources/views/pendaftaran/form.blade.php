@@ -5,20 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pendaftaran - Step 1</title>
     <link rel="stylesheet" href="{{ asset('front_end/pendaftaran.css') }}">
-    <style>
-        .error-message {
-            color: #dc3545;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-    </style>
 </head>
 <body>
 
@@ -31,15 +17,15 @@
         </div>
         <div class="step">
             <span>2</span>
-            <p>Pilih Jadwal</p>
+            <p>pilih dokter</p>
         </div>
         <div class="step">
             <span>3</span>
-            <p>Permasalahan</p>
+            <p>pembayaran</p>
         </div>
         <div class="step">
             <span>4</span>
-            <p>Dokumen</p>
+            <p>dokumen</p>
         </div>
     </div>
 
@@ -101,6 +87,27 @@
             <label>Tanggal Lahir</label>
             <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}">
             @error('tanggal_lahir')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label>Tanggal Konsultasi</label>
+            <input type="date" name="tanggal_konsultasi" value="{{ old('tanggal_konsultasi') }}">
+            @error('tanggal_konsultasi')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label>waktu konsultasi</label>
+            <input type="time" name="waktu_konsultasi" value="{{ old('waktu_konsultasi') }}">
+            @error('waktu_konsultasi')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label>permasalahan</label>
+            <input type="text" name="permasalahan" value="{{ old('permasalahan') }}" placeholder="masukan permasalahan">
+            @error('permasalahan')
                 <div class="error-message">{{ $message }}</div>
             @enderror
         </div>

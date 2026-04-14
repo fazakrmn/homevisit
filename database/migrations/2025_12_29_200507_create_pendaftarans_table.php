@@ -16,23 +16,13 @@ return new class extends Migration
             $table->string('nik', 16)->unique();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->date('tanggal_lahir');
-            
-            // Data step 2 - Pilih Jadwal
             $table->date('tanggal_konsultasi')->nullable();
             $table->time('waktu_konsultasi')->nullable();
-            
-            // Data step 3 - Permasalahan
             $table->text('permasalahan')->nullable();
-            $table->string('kategori_masalah')->nullable();
-            
-            // Data step 4 - Dokumen
-            $table->string('dokumen_ktp')->nullable();
-            $table->string('dokumen_pendukung')->nullable();
-            
-            // Status tracking
-            $table->enum('status_step', ['1', '2', '3', '4', 'selesai'])->default('1');
-            $table->enum('status_pendaftaran', ['draft', 'pending', 'approved', 'rejected'])->default('draft');
-            
+            $table->string('dokter')->nullable();
+            $table->enum('status_pendaftaran', ['pending', 'approved', 'rejected'])->default('pending');  
+            $table->string('pembayaran')->nullable();
+            $table->enum('status_step', ['step1', 'step2', 'step3', 'selesai'])->default('step1');
             $table->timestamps();
         });
     }

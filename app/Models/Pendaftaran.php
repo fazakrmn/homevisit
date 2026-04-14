@@ -9,6 +9,8 @@ class Pendaftaran extends Model
 {
     use HasFactory;
 
+    protected $table = 'pendaftarans';
+    
     protected $fillable = [
         'nama',
         'no_telepon',
@@ -23,7 +25,9 @@ class Pendaftaran extends Model
         'dokumen_ktp',
         'dokumen_pendukung',
         'status_step',
-        'status_pendaftaran'
+        'status_pendaftaran',
+        'dokter'
+        ,'pembayaran'
     ];
 
     protected $casts = [

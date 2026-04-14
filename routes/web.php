@@ -7,7 +7,7 @@ use App\Http\Middleware\AdminController;
 
 Route::get('/', [UserController::class, 'index'])->name('index');
 
-Route::get('/dashboard', [UserController::class, 'Dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [UserController::class, 'Dashboard'])->middleware(['auth', 'verified', 'admin'])->name('dashboard');
 
 route::get('/home', [UserController::class, 'welcome'])->name('welcome');
 route::get('/pendaftaran', [UserController::class, 'form'])->name('pendaftaran.form');
@@ -30,11 +30,11 @@ Route::prefix('pendaftaran')->name('pendaftaran.')->group(function () {
     Route::get('/step1', [PendaftaranController::class, 'step1'])->name('step1');
     Route::post('/step1', [PendaftaranController::class, 'storeStep1'])->name('step1.store');
     
-    // Step 2 - Pilih Jadwal
+    // Step 2 - Pilih dokter
     Route::get('/step2/{id}', [PendaftaranController::class, 'step2'])->name('step2');
     Route::post('/step2/{id}', [PendaftaranController::class, 'storeStep2'])->name('step2.store');
     
-    // Step 3 - Permasalahan
+    // Step 3 - Pembayaran
     Route::get('/step3/{id}', [PendaftaranController::class, 'step3'])->name('step3');
     Route::post('/step3/{id}', [PendaftaranController::class, 'storeStep3'])->name('step3.store');
     
@@ -51,3 +51,9 @@ Route::prefix('pendaftaran')->name('pendaftaran.')->group(function () {
 });
 
 use App\Http\Controllers\DashboardController;
+
+// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// // Jika butuh route search, update status, delete:
+// Route::get('/dashboard/search', [DashboardController::class, 'search'])->name('dashboard.search');
+// Route::put('/dashboard/{id}/status', [DashboardController::class, 'updateStatus'])->name('dashboard.updateStatus');
+// Route::delete('/dashboard/{id}', [DashboardController::class, 'destroy'])->name('dashboard.destroy');
