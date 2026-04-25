@@ -1,12 +1,7 @@
 <x-app-layout>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="front_end/dashboard.css">
-</head>
-<body>
+<link rel="stylesheet" href="{{ asset('front_end/dashboard.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -25,22 +20,18 @@
                 <span class="menu-item-icon"><i class="fa-solid fa-cogs"></i></span>
                 <span>Pengaturan</span>
             </a>
-             <a href="#" class="menu-item">
-                <span class="menu-item-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
-                <span>Keluar</span>
+            <a href="{{ route('profile.edit') }}" class="menu-item">
+                <span class="menu-item-icon"><i class="fa-solid fa-user"></i></span>
+                <span>Profile</span>
             </a>
             <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
+                @csrf
+                <a href="{{ route('logout') }}" class="menu-item"
+                   onclick="event.preventDefault(); this.closest('form').submit();">
+                    <span class="menu-item-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+                    <span>Keluar</span>
+                </a>
+            </form>
         </div>
     </div>
 
@@ -80,72 +71,54 @@
         <!-- User Management Table -->
         <div class="content-card">
             <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Cari menggunakan nama pengguna" id="searchInput" onkeyup="searchUsers()">
+                <input type="text" class="search-input" placeholder="Cari menggunakan nama pengguna" id="searchInput">
                 <button class="btn btn-primary" onclick="searchUsers()">Cari</button>
             </div>
 
             <div class="table-container">
-                <table id="usersTable">
+                <table class="table">
                     <thead>
                         <tr>
-                    </div>
-                </div>
-            </div>
-{{-- Tabel Data --}}
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>NAME</th>
-            <th>NO_TELEPON</th>
-            <th>ALAMAT</th>
-            <th>NIK</th>
-            <th>JENIS_KELAMIN</th>
-            <th>TANGGAL_LAHIR</th>
-            <th>TANGGAL_KONSULTASI</th>
-            <th>WAKTU_KONSULTASI</th>
-            <th>PERMASALAHAN</th>
-            <th>DOKTER</th>
-            <th>PEMBAYARAN</th>
-            <th>STATUS</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse($penggunas as $pengguna)
-        <tr>
-            <td>{{ $pengguna->id }}</td>
-            <td>{{ $pengguna->nama }}</td>
-            <td>{{ $pengguna->no_telepon }}</td>
-            <td>{{ $pengguna->alamat }}</td>
-            <td>{{ $pengguna->nik }}</td>
-            <td>{{ $pengguna->jenis_kelamin }}</td>
-            <td>{{ $pengguna->tanggal_lahir }}</td>
-            <td>{{ $pengguna->tanggal_konsultasi }}</td>
-            <td>{{ $pengguna->waktu_konsultasi }}</td>
-            <td>{{ $pengguna->permasalahan }}</td>
-            <td>{{ $pengguna->dokter }}</td>
-            <td>{{ $pengguna->pembayaran }}</td>
-            <td>{{ $pengguna->status_pendaftaran }}</td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="12" class="text-center">Tidak ada data</td>
-        </tr>
-        @endforelse
-    </tbody>
-</table>  
+                            <th>ID</th>
+                            <th>NAMA</th>
+                            <th>NO TELEPON</th>
+                            <th>ALAMAT</th>
+                            <th>NIK</th>
+                            <th>JENIS KELAMIN</th>
+                            <th>TANGGAL LAHIR</th>
+                            <th>TANGGAL KONSULTASI</th>
+                            <th>WAKTU KONSULTASI</th>
+                            <th>PERMASALAHAN</th>
+                            <th>DOKTER</th>
+                            <th>PEMBAYARAN</th>
+                            <th>STATUS</th>
+                        </tr>
                     </thead>
                     <tbody id="tableBody">
-                        <!-- Data will be inserted here -->
+                        @forelse($penggunas as $pengguna)
+                        <tr>
+                            <td>{{ $pengguna->id }}</td>
+                            <td>{{ $pengguna->nama }}</td>
+                            <td>{{ $pengguna->no_telepon }}</td>
+                            <td>{{ $pengguna->alamat }}</td>
+                            <td>{{ $pengguna->nik }}</td>
+                            <td>{{ $pengguna->jenis_kelamin }}</td>
+                            <td>{{ $pengguna->tanggal_lahir }}</td>
+                            <td>{{ $pengguna->tanggal_konsultasi }}</td>
+                            <td>{{ $pengguna->waktu_konsultasi }}</td>
+                            <td>{{ $pengguna->permasalahan }}</td>
+                            <td>{{ $pengguna->dokter }}</td>
+                            <td>{{ $pengguna->pembayaran }}</td>
+                            <td>{{ $pengguna->status_pendaftaran }}</td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="13" class="text-center">Tidak ada data</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-
-            <div class="pagination" id="pagination">
-                <!-- Pagination buttons will be inserted here -->
-            </div>
         </div>
     </div>
-</body>
-</html>
 </x-app-layout>

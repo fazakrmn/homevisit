@@ -23,6 +23,10 @@ return new class extends Migration
             $table->enum('status_pendaftaran', ['pending', 'approved', 'rejected'])->default('pending');  
             $table->string('pembayaran')->nullable();
             $table->enum('status_step', ['step1', 'step2', 'step3', 'selesai'])->default('step1');
+            $table->string('order_id')->unique()->nullable();
+            $table->decimal('total_amount', 12, 2)->nullable();
+            $table->string('status')->default('pending');
+            $table->string('snap_token')->nullable();
             $table->timestamps();
         });
     }

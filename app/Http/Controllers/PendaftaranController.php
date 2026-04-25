@@ -3,14 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pendaftaran;
+use App\Models\Order;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Midtrans\Snap;
+use Midtrans\Config;
 
 class PendaftaranController extends Controller
 {
+    public function __construct()
+    {
+        Config::$serverKey    = config('midtrans.server_key');
+        Config::$clientKey    = config('midtrans.client_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized  = config('midtrans.is_sanitized');
+        Config::$is3ds        = config('midtrans.is_3ds');
+    }
+
     public function step1()
     {
-        return view('pendaftaran.step1');
+        return view('pendaftaran.form');
     }
 
     public function storeStep1(Request $request)
@@ -64,15 +75,16 @@ class PendaftaranController extends Controller
 
     public function storeStep2(Request $request, $id)
     {
-         $validated = $request->validate([
-             'dokter' => 'required|string|max:255',
-         ]);
-         
-         $pendaftaran = Pendaftaran::findOrFail($id);
-         $pendaftaran->update([
+        $validated = $request->validate([
+            'dokter' => 'required|string|max:255',
+        ]);
+
+        $pendaftaran = Pendaftaran::findOrFail($id);
+        $pendaftaran->update([
             'dokter' => $validated['dokter'],
+            'total_amount' => 100000,
             'status_step' => 'step2',
-         ]);
+        ]);
 
         return redirect()->route('pendaftaran.step3', $id)
                         ->with('success', 'Jadwal berhasil dipilih.');
@@ -81,78 +93,87 @@ class PendaftaranController extends Controller
     public function step3($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
-        return view('pendaftaran.pembayaran', compact('pendaftaran'));
+
+        // Create Midtrans order and get snap token
+        $orderId = 'ORDER-' . $id . '-' . uniqid();
+        
+        $pendaftaran->update([
+            'order_id' => $orderId,
+            'status' => 'pending',
+        ]);
+
+        $params = [
+            'transaction_details' => [
+                'order_id'     => $orderId,
+                'gross_amount' => (int) $pendaftaran->total_amount,
+            ],
+            'customer_details' => [
+                'first_name' => $pendaftaran->nama,
+            ],
+            'item_details' => [
+                [
+                    'id'       => 'homevisit-' . $id,
+                    'price'    => (int) $pendaftaran->total_amount,
+                    'quantity' => 1,
+                    'name'     => 'Layanan Home Visit',
+                ],
+            ],
+        ];
+
+        try {
+            $snapToken = Snap::getSnapToken($params);
+            $pendaftaran->update(['snap_token' => $snapToken]);
+        } catch (\Exception $e) {
+            $snapToken = null;
+        }
+
+        return view('pendaftaran.pembayaran', compact('pendaftaran', 'snapToken'));
     }
 
     public function storeStep3(Request $request, $id)
     {
-        $validated = $request->validate([
-            'pembayaran' => 'required|string',
-        ]);
-
         $pendaftaran = Pendaftaran::findOrFail($id);
+
         $pendaftaran->update([
-            'pembayaran' => $validated['pembayaran'],
+            'pembayaran' => $request->pembayaran,
             'status_step' => 'step3',
         ]);
 
         return redirect()->route('pendaftaran.step4', $id)
-                        ->with('success', 'Pembayaran berhasil disimpan.');
+                        ->with('success', 'Pembayaran berhasil diproses.');
     }
 
-    // Tampilkan form step 4
     public function step4($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
         return view('pendaftaran.dokumen', compact('pendaftaran'));
     }
 
-    // Proses step 4 (upload dokumen)
     public function storeStep4(Request $request, $id)
     {
-        $validated = $request->validate([
-            // 'dokumen_ktp' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            // 'dokumen_pendukung' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
         $pendaftaran = Pendaftaran::findOrFail($id);
-
-        // // Upload dokumen KTP
-        // if ($request->hasFile('dokumen_ktp')) {
-        //     $ktpPath = $request->file('dokumen_ktp')->store('dokumen/ktp', 'public');
-        //     $pendaftaran->dokumen_ktp = $ktpPath;
-        // }
-
-        // // Upload dokumen pendukung (opsional)
-        // if ($request->hasFile('dokumen_pendukung')) {
-        //     $pendukungPath = $request->file('dokumen_pendukung')->store('dokumen/pendukung', 'public');
-        //     $pendaftaran->dokumen_pendukung = $pendukungPath;
-        // }
 
         $pendaftaran->update([
             'status_step' => 'selesai',
-            'status_pendaftaran' => 'pending'
+            'status_pendaftaran' => 'selesai'
         ]);
 
         return redirect()->route('pendaftaran.sukses', $id)
                         ->with('success', 'Pendaftaran berhasil! Data Anda sedang diproses.');
     }
 
-    // Halaman sukses
     public function sukses($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);
         return view('pendaftaran.sukses', compact('pendaftaran'));
     }
 
-    // List semua pendaftaran (untuk admin)
     public function index()
     {
         $pendaftarans = Pendaftaran::latest()->paginate(10);
-        return view('pendaftaran.form', compact('pendaftarans'));
+        return view('pendaftaran.index', compact('pendaftarans'));
     }
 
-    // Detail pendaftaran
     public function show($id)
     {
         $pendaftaran = Pendaftaran::findOrFail($id);

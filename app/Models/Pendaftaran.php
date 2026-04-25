@@ -21,19 +21,25 @@ class Pendaftaran extends Model
         'tanggal_konsultasi',
         'waktu_konsultasi',
         'permasalahan',
-        'kategori_masalah',
-        'dokumen_ktp',
-        'dokumen_pendukung',
         'status_step',
         'status_pendaftaran',
-        'dokter'
-        ,'pembayaran'
+        'dokter',
+        'pembayaran',
+        'order_id',
+        'total_amount',
+        'status',
+        'snap_token',
     ];
 
     protected $casts = [
         'tanggal_lahir' => 'date',
         'tanggal_konsultasi' => 'date',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Accessor untuk format tanggal Indonesia
     public function getTanggalLahirFormatAttribute()

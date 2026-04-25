@@ -350,7 +350,7 @@
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
             <circle cx="12" cy="9" r="2.5"/>
           </svg>
-          Jl. Kamboja No.23
+          {{ $pendaftaran->alamat }}
         </div>
       </div>
 
@@ -371,15 +371,15 @@
       <div class="order-meta">
         <div class="meta-row">
           <span class="meta-label">No. Pesanan</span>
-          <span class="meta-value">13751931110</span>
+          <span class="meta-value">{{ $pendaftaran->order_id ?? '-' }}</span>
         </div>
         <div class="meta-row">
           <span class="meta-label">Waktu Pemesanan</span>
-          <span class="meta-value">25-12-2025 &nbsp; 10:00</span>
+          <span class="meta-value">{{ $pendaftaran->created_at ? $pendaftaran->created_at->format('d-m-Y H:i') : '-' }}</span>
         </div>
         <div class="meta-row">
           <span class="meta-label">Waktu Pesanan Selesai</span>
-          <span class="meta-value">25-12-2025 &nbsp; 10:45</span>
+          <span class="meta-value">{{ $pendaftaran->updated_at ? $pendaftaran->updated_at->format('d-m-Y H:i') : '-' }}</span>
         </div>
       </div>
 
@@ -407,38 +407,38 @@
       <!-- receipt body -->
       <div class="receipt-body">
         <p class="receipt-title">Bukti Pembayaran</p>
-        <p class="receipt-no">No. 13751931110</p>
+        <p class="receipt-no">No. {{ $pendaftaran->order_id ?? '-' }}</p>
 
         <div class="divider"></div>
 
         <div class="receipt-row">
           <span class="r-label">Sudah diterima dari</span>
           <span class="r-sep">:</span>
-          <span class="r-value">Ny. Hermione</span>
+          <span class="r-value">{{ $pendaftaran->pembayaran ?? $pendaftaran->nama }}</span>
         </div>
         <div class="receipt-row">
           <span class="r-label">Nama Pastien</span>
           <span class="r-sep">:</span>
-          <span class="r-value">Ny. Hermione</span>
+          <span class="r-value">{{ $pendaftaran->nama }}</span>
         </div>
         <div class="receipt-row">
           <span class="r-label">Nama Dokter</span>
           <span class="r-sep">:</span>
-          <span class="r-value">Bd. Ainun Salisiya Nuri. A</span>
+          <span class="r-value">{{ $pendaftaran->dokter ?? '-' }}</span>
         </div>
 
         <p class="section-title">Untuk Pembayaran</p>
 
         <div class="service-row">
           <span class="s-name">Layanan Home Visit</span>
-          <span class="s-price">Rp. 300.000.00</span>
+          <span class="s-price">Rp {{ number_format($pendaftaran->total_amount, 0, ',', '.') }}</span>
         </div>
 
         <div class="divider"></div>
 
         <div class="total-row">
           <span>Total Pembayaran</span>
-          <span>Rp. 300.000.00</span>
+          <span>Rp {{ number_format($pendaftaran->total_amount, 0, ',', '.') }}</span>
         </div>
 
         <div class="method-row">
@@ -446,14 +446,14 @@
           <span class="m-value">Transfer Bank</span>
         </div>
 
-        <p class="receipt-date">Purwokerto, 25 Desember 2025</p>
+        <p class="receipt-date">Purwokerto, {{ $pendaftaran->created_at ? $pendaftaran->created_at->translatedFormat('d F Y') : '-' }}</p>
       </div>
     </div>
 
     <!-- ── BUTTON ── -->
     <div class="btn-row">
       <button class="btn-kembali">
-        <a href="{{ url('pendaftaran/step3') }}">KEMBALI</a>
+        <a href="{{ url('pendaftaran/step3/' . $pendaftaran->id) }}">KEMBALI</a>
       </button>
     </div>
 

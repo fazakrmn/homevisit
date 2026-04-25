@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PaymentController;
+
 
 Route::prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
@@ -10,3 +12,4 @@ Route::prefix('dashboard')->group(function () {
     Route::patch('/{id}/status', [DashboardController::class, 'updateStatus']);
     Route::delete('/{id}', [DashboardController::class, 'destroy']);
 });
+

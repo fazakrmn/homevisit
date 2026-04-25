@@ -77,7 +77,7 @@
         <div class="s-box">
             <i class="fas fa-house-medical"></i>
             <div class="s-label">
-                <a href="{{ route('pendaftaran.form') }}">Daftar Home Visit</a>
+                <a href="{{ route('pendaftaran.step1') }}">Daftar Home Visit</a>
             </div>
         </div>
         <div class="s-box">
